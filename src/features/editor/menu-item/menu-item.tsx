@@ -4,10 +4,14 @@ import { Audios } from "./audios";
 import { Elements } from "./elements";
 import { Images } from "./images";
 import { Videos } from "./videos";
+import { Uploads } from "./uploads";
 
 const ActiveMenuItem = () => {
   const { activeMenuItem } = useLayoutStore();
 
+  if (activeMenuItem === "uploads") {
+  return <Uploads />;
+  }
   if (activeMenuItem === "texts") {
     return <Texts />;
   }
