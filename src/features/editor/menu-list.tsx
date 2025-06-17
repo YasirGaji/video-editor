@@ -8,21 +8,7 @@ export default function MenuList() {
     useLayoutStore();
   return (
     <div className="flex w-14 flex-col items-center gap-1 border-r border-border/80 py-2">
-      <Button
-        onClick={() => {
-          setActiveMenuItem("uploads");
-          setShowMenuItem(true);
-        }}
-        className={cn(
-          showMenuItem && activeMenuItem === "uploads"
-            ? "bg-secondary"
-            : "text-muted-foreground",
-        )}
-        variant={"ghost"}
-        size={"icon"}
-      >
-        <Icons.upload width={16} />
-      </Button>
+
 
       <Button
         onClick={() => {
