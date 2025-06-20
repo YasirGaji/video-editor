@@ -58,6 +58,22 @@ export default function MenuList() {
 
       <Button
         onClick={() => {
+          setActiveMenuItem("segments");
+          setShowMenuItem(true);
+        }}
+        className={cn(
+          showMenuItem && activeMenuItem === "segments"
+            ? "bg-secondary"
+            : "text-muted-foreground",
+        )}
+        variant={"ghost"}
+        size={"icon"}
+      >
+        <Icons.logo width={16} />
+      </Button>
+
+      <Button
+        onClick={() => {
           setActiveMenuItem("images");
           setShowMenuItem(true);
         }}

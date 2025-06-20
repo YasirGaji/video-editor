@@ -5,6 +5,7 @@ import { Elements } from "./elements";
 import { Images } from "./images";
 import { Videos } from "./videos";
 import { Uploads } from "./uploads";
+import { Segments } from "./segments";
 
 const ActiveMenuItem = () => {
   const { activeMenuItem } = useLayoutStore();
@@ -12,6 +13,7 @@ const ActiveMenuItem = () => {
   if (activeMenuItem === "uploads") {
   return <Uploads />;
   }
+
   if (activeMenuItem === "texts") {
     return <Texts />;
   }
@@ -28,6 +30,10 @@ const ActiveMenuItem = () => {
 
   if (activeMenuItem === "images") {
     return <Images />;
+  }
+
+  if (activeMenuItem === "segments") {
+    return <Segments />;
   }
 
   return null;

@@ -43,7 +43,7 @@ export const createLocalVideo = async (file: File): Promise<LocalVideoResult> =>
         flipX: false,
         flipY: false,
         rotate: "",
-        visibility: "hidden"
+        visibility: "visible",
       } ,
       metadata: {
         fileName: file.name,

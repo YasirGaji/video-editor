@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ITrackItem } from "@designcombo/types";
 
 export type IMenuItem =
@@ -10,7 +11,8 @@ export type IMenuItem =
   | "transitions"
   | "texts"
   | "captions"
-  | "voiceOver";
+  | "voiceOver"
+  | "segments";
 export interface ILayoutState {
   cropTarget: ITrackItem | null;
   trackItem: ITrackItem | null;
