@@ -16,6 +16,16 @@ interface ProcessedVideo {
   aspectRatioValidation: AspectRatioValidation;
 }
 
+const SUPPORTED_VIDEO_EXTENSIONS = [
+  '.mp4', '.avi', '.mov', '.mkv', '.webm', '.flv', '.wmv', '.m4v', '.3gp', '.ogv'
+];
+
+const SUPPORTED_VIDEO_MIME_TYPES = [
+  'video/mp4', 'video/avi', 'video/quicktime', 'video/x-msvideo',
+  'video/x-matroska', 'video/webm', 'video/x-flv', 'video/x-ms-wmv',
+  'video/3gpp', 'video/ogg'
+];
+
 const createVideoElement = (file: File): Promise<HTMLVideoElement> => {
   return new Promise((resolve, reject) => {
     const video = document.createElement('video');
@@ -49,6 +59,16 @@ export const extractVideoMetadata = async (file: File): Promise<VideoMetadata> =
     width: video.videoWidth,
     height: video.videoHeight,
   };
+
+  console.log('Extracted metadata:', {
+    fileName: file.name,
+    duration: metadata.duration,
+    width: metadata.width,
+    height: metadata.height,
+    videoDuration: video.duration,
+    videoWidth: video.videoWidth,
+    videoHeight: video.videoHeight
+  });
   
   URL.revokeObjectURL(video.src);
   
@@ -131,5 +151,18 @@ export const processVideoFile = async (file: File): Promise<ProcessedVideo> => {
 };
 
 export const isVideoFile = (file: File): boolean => {
-  return file.type.startsWith('video/');
+  if (file.type && SUPPORTED_VIDEO_MIME_TYPES.some(type => file.type.startsWith(type.split('/')[0]))) {
+    return true;
+  }
+  
+  const fileName = file.name.toLowerCase();
+  const hasVideoExtension = SUPPORTED_VIDEO_EXTENSIONS.some(ext => fileName.endsWith(ext));
+  
+  const hasVideoMimePattern = file.type.includes('video') || 
+                             file.type.includes('mp4') || 
+                             file.type.includes('webm') ||
+                             file.type.includes('quicktime') ||
+                             file.type.includes('x-msvideo');
+  
+  return hasVideoExtension || hasVideoMimePattern;
 };

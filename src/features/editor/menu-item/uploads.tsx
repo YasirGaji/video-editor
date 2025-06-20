@@ -7,7 +7,7 @@ import { Icons } from "@/components/shared/icons";
 import { dispatch } from "@designcombo/events";
 import { ADD_VIDEO } from "@designcombo/state";
 import { IVideo } from "@designcombo/types";
-import { createMultipleLocalVideos, createLocalVideo } from "../utils/local-video";
+import { createMultipleLocalVideos } from "../utils/local-video";
 import { useIsDraggingOverTimeline } from "../hooks/is-dragging-over-timeline";
 
 interface UploadedVideo {
@@ -47,19 +47,7 @@ export const Uploads = () => {
     }
   };
 
-  const handleSingleFileUpload = async (file: File) => {
-    setIsProcessing(true);
-    setError("");
 
-    try {
-      const result = await createLocalVideo(file);
-      setUploadedVideos(prev => [...prev, result]);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to process video");
-    } finally {
-      setIsProcessing(false);
-    }
-  };
 
   const clearUploads = () => {
     uploadedVideos.forEach(({ video }) => {
@@ -94,18 +82,19 @@ export const Uploads = () => {
 
       <ScrollArea>
         <div className="px-4 space-y-4">
-          {/* File Uploader */}
           <FileUploader
             value={[]}
             onValueChange={handleFileUpload}
-            accept={{ "video/*": [] }}
+            accept={{ 
+              "video/*": [".mp4", ".avi", ".mov", ".mkv", ".webm", ".flv", ".wmv", ".m4v"]
+            }}            
             maxFileCount={10}
+            maxSize={4024 * 4024 * 4024}
             multiple
             disabled={isProcessing}
             className="min-h-[120px]"
           />
 
-          {/* Processing State */}
           {isProcessing && (
             <div className="flex items-center justify-center py-4">
               <Icons.spinner className="h-4 w-4 animate-spin mr-2" />
@@ -115,7 +104,6 @@ export const Uploads = () => {
             </div>
           )}
 
-          {/* Error Display */}
           {error && (
             <div className="bg-destructive/10 border border-destructive/20 rounded-md p-3">
               <div className="flex items-start gap-2">
@@ -127,7 +115,6 @@ export const Uploads = () => {
             </div>
           )}
 
-          {/* Uploaded Videos Grid */}
           {uploadedVideos.length > 0 && (
             <div className="space-y-3">
               <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
