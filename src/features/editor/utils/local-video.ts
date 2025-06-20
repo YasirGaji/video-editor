@@ -25,31 +25,35 @@ export const createLocalVideo = async (file: File): Promise<LocalVideoResult> =>
       name: file.name,
       preview: processed.thumbnailUrl,
       duration: processed.metadata.duration,
+          trim: {
+        from: 0,
+        to: processed.metadata.duration,
+      },
+      display: {
+        from: 0,
+        to: processed.metadata.duration,
+      },
       details: {
         src: processed.blobUrl,
-        width: processed.metadata.width,
-        height: processed.metadata.height,
-        volume: 1,
+        blob: file,
+        width: 0,
+        height: 0,
         blur: 0,
-        brightness: 1,
+        brightness: 0,
         flipX: false,
         flipY: false,
-        rotate: "0deg",
-        visibility: "visible" as const,
-        blob: file,
-        crop: {
-          x: 0,
-          y: 0,
-          width: processed.metadata.width,
-          height: processed.metadata.height,
-        },
-      },
+        rotate: "",
+        visibility: "hidden"
+      } ,
       metadata: {
         fileName: file.name,
         fileSize: file.size,
         aspectRatio: processed.metadata.width / processed.metadata.height,
         isLocal: true,
         previewUrl: processed.thumbnailUrl,
+
+        originalWidth: processed.metadata.width,
+        originalHeight: processed.metadata.height,
       },
     };
 

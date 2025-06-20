@@ -126,6 +126,10 @@ export const SequenceItem: Record<
       height: item.details.height,
     };
 
+    const trimFrom = item.trim?.from || 0;
+    const trimTo = item.trim?.to || item.duration || item.display.to;
+
+
     return (
       <Sequence
         key={item.id}
@@ -149,11 +153,11 @@ export const SequenceItem: Record<
           >
             <div style={calculateMediaStyles(details, crop)}>
               <OffthreadVideo
-                startFrom={(item.trim?.from! / 1000) * fps}
-                endAt={(item.trim?.to! / 1000) * fps}
+                startFrom={(trimFrom / 1000) * fps}
+                endAt={(trimTo / 1000) * fps}
                 playbackRate={playbackRate}
                 src={details.src}
-                volume={details.volume || 0 / 100}
+                volume={(details.volume || 0) / 100}
               />
             </div>
           </Animated>
@@ -172,6 +176,11 @@ export const SequenceItem: Record<
       },
       fps,
     );
+
+    const trimFrom = item.trim?.from || 0;
+    const trimTo = item.trim?.to || item.duration || item.display.to;
+
+
     return (
       <Sequence
         key={item.id}
@@ -185,11 +194,11 @@ export const SequenceItem: Record<
       >
         <AbsoluteFill>
           <Audio
-            startFrom={(item.trim?.from! / 1000) * fps}
-            endAt={(item.trim?.to! / 1000) * fps}
+            startFrom={(trimFrom / 1000) * fps}
+            endAt={(trimTo / 1000) * fps}
             playbackRate={playbackRate}
             src={details.src}
-            volume={details.volume! / 100}
+            volume={(details.volume || 0) / 100}
           />
         </AbsoluteFill>
       </Sequence>
