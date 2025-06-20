@@ -1,6 +1,7 @@
 import { IVideo } from "@designcombo/types";
 import { generateId } from "@designcombo/timeline";
 import { processVideoFile, isVideoFile } from "./video";
+import useStore from "../store/use-store";
 
 interface LocalVideoResult {
   video: Partial<IVideo>;
@@ -14,6 +15,9 @@ export const createLocalVideo = async (file: File): Promise<LocalVideoResult> =>
 
   try {
     const processed = await processVideoFile(file);
+
+    const { adaptCanvasToVideo } = useStore.getState();
+    adaptCanvasToVideo(processed.metadata.width, processed.metadata.height);
     
     const video: Partial<IVideo> = {
       id: generateId(),
