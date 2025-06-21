@@ -3,27 +3,22 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/shared/icons";
 import { FileUploader } from "@/components/ui/file-uploader";
+import useSegmentsStore, { Segment, SegmentData } from "../store/use-segments-store";
 
 
-interface Segment {
-  index: number;
-  start: string;
-  end: string;
-  text: string;
-}
-
-interface SegmentData {
-  title?: string;
-  videoSource?: string;
-  segments: Segment[];
-}
 
 export const Segments = () => {
-  const [segmentData, setSegmentData] = useState<SegmentData | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string>("");
-  const [selectedSegments, setSelectedSegments] = useState<Set<number>>(new Set());
 
+  const {
+    segmentData,
+    segments,
+    selectedSegments,
+    setSegmentData,
+    setSelectedSegments,
+    clearSelection,
+  } = useSegmentsStore();
 
 
   const parseCSV = (content: string): Segment[] => {
@@ -83,21 +78,28 @@ export const Segments = () => {
   };
 
   const handleSegmentSelection = (segmentIndex: number, isSelected: boolean) => {
-  setSelectedSegments(prev => {
-    const newSet = new Set(prev);
-    if (isSelected) {
-      newSet.add(segmentIndex);
-    } else {
-      newSet.delete(segmentIndex);
-    }
-    console.log('Selected segments:', Array.from(newSet));
-    return newSet;
-  });
+  if (isSelected) {
+    const newSelection = new Set(selectedSegments);
+    newSelection.add(segmentIndex);
+    setSelectedSegments(newSelection);
+  } else {
+    const newSelection = new Set(selectedSegments);
+    newSelection.delete(segmentIndex);
+    setSelectedSegments(newSelection);
+  }
 };
 
   const clearSegments = () => {
     setSegmentData(null);
     setError("");
+  };
+
+  const handleCreateTimeline = () => {
+    if (!segmentData || selectedSegments.size === 0) return;
+    
+    // TODO: This will be implemented in Step 2
+    // Create a segment timeline item and add it to the timeline
+    console.log('Creating timeline with selected segments:', Array.from(selectedSegments));
   };
 
   return (
@@ -146,8 +148,6 @@ export const Segments = () => {
             </>
           ) : (
             <>
-           
-
               <div className="space-y-3">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -166,18 +166,15 @@ export const Segments = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => {
-                          console.log('Selected segments for export:', Array.from(selectedSegments));
-                          // TODO: Implement export functionality
-                        }}
+                        onClick={handleCreateTimeline}
                         className="h-7 px-2 text-xs"
                       >
-                        Export Selected ({selectedSegments.size})
+                        Add to Timeline ({selectedSegments.size})
                       </Button>
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => setSelectedSegments(new Set())}
+                        onClick={clearSelection}
                         className="h-7 px-2 text-xs"
                       >
                         Clear Selection
@@ -187,7 +184,7 @@ export const Segments = () => {
                 </div>
                   
                 <div className="space-y-2 max-h-[400px] overflow-y-auto">
-                  {segmentData.segments.map((segment) => (
+                  {segments.map((segment) => (
                     <div
                       key={segment.index}
                       className="p-3 border border-border rounded-md hover:bg-secondary/50 transition-colors"
@@ -204,8 +201,8 @@ export const Segments = () => {
                             <span className="text-xs font-medium text-primary">
                               Segment {segment.index}
                             </span>
-                            <span className="text-xs text-muted-foreground">
-                              {segment.start} → {segment.end}
+                           <span className="text-xs text-muted-foreground">
+                              {Math.floor(segment.startTime / 1000)}s → {Math.floor(segment.endTime / 1000)}s
                             </span>
                           </div>
                           <p className="text-xs text-muted-foreground line-clamp-2">
