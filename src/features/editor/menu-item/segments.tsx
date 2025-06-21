@@ -49,8 +49,6 @@ export const Segments = () => {
     return data;
   };
 
-  
-
   const handleFileUpload = async (files: File[]) => {
     if (files.length === 0) return;
     
@@ -83,8 +81,6 @@ export const Segments = () => {
       setIsProcessing(false);
     }
   };
-
-
 
   const handleSegmentSelection = (segmentIndex: number, isSelected: boolean) => {
   setSelectedSegments(prev => {
@@ -153,73 +149,73 @@ export const Segments = () => {
            
 
               <div className="space-y-3">
-           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
-                {segmentData.title} ({segmentData.segments.length} segments)
-              </div>
-              {selectedSegments.size > 0 && (
-                <div className="text-xs font-medium text-primary">
-                  {selectedSegments.size} selected
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+                      {segmentData.title} ({segmentData.segments.length} segments)
+                    </div>
+                    {selectedSegments.size > 0 && (
+                      <div className="text-xs font-medium text-primary">
+                        {selectedSegments.size} selected
+                      </div>
+                    )}
+                  </div>
+                  
+                  {selectedSegments.size > 0 && (
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          console.log('Selected segments for export:', Array.from(selectedSegments));
+                          // TODO: Implement export functionality
+                        }}
+                        className="h-7 px-2 text-xs"
+                      >
+                        Export Selected ({selectedSegments.size})
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedSegments(new Set())}
+                        className="h-7 px-2 text-xs"
+                      >
+                        Clear Selection
+                      </Button>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-            
-            {selectedSegments.size > 0 && (
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    console.log('Selected segments for export:', Array.from(selectedSegments));
-                    // TODO: Implement export functionality
-                  }}
-                  className="h-7 px-2 text-xs"
-                >
-                  Export Selected ({selectedSegments.size})
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedSegments(new Set())}
-                  className="h-7 px-2 text-xs"
-                >
-                  Clear Selection
-                </Button>
-              </div>
-            )}
-          </div>
-                
+                  
                 <div className="space-y-2 max-h-[400px] overflow-y-auto">
-                 {segmentData.segments.map((segment) => (
-                  <div
-                    key={segment.index}
-                    className="p-3 border border-border rounded-md hover:bg-secondary/50 transition-colors"
-                  >
-                    <div className="flex items-start gap-3">
-                      <input
-                        type="checkbox"
-                        className="mt-1"
-                        checked={selectedSegments.has(segment.index)}
-                        onChange={(e) => handleSegmentSelection(segment.index, e.target.checked)}
-                      />
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between gap-2 mb-2">
-                          <span className="text-xs font-medium text-primary">
-                            Segment {segment.index}
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            {segment.start} → {segment.end}
-                          </span>
+                  {segmentData.segments.map((segment) => (
+                    <div
+                      key={segment.index}
+                      className="p-3 border border-border rounded-md hover:bg-secondary/50 transition-colors"
+                    >
+                      <div className="flex items-start gap-3">
+                        <input
+                          type="checkbox"
+                          className="mt-1"
+                          checked={selectedSegments.has(segment.index)}
+                          onChange={(e) => handleSegmentSelection(segment.index, e.target.checked)}
+                        />
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between gap-2 mb-2">
+                            <span className="text-xs font-medium text-primary">
+                              Segment {segment.index}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              {segment.start} → {segment.end}
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground line-clamp-2">
+                            {segment.text}
+                          </p>
                         </div>
-                        <p className="text-xs text-muted-foreground line-clamp-2">
-                          {segment.text}
-                        </p>
                       </div>
                     </div>
+                  ))}
                   </div>
-                ))}
-                </div>
               </div>
             </>
           )}

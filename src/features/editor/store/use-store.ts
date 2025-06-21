@@ -123,7 +123,7 @@ const useStore = create<ITimelineStore>((set, get) => ({
     });
   },
 
-  adaptCanvasToVideo: (videoWidth: number, videoHeight: number) => {
+adaptCanvasToVideo: (videoWidth: number, videoHeight: number) => {
     const currentState = get();
     
     const shouldAdapt = currentState.trackItemIds.length === 0 || 
